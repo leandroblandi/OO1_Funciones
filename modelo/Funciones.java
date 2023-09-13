@@ -3,13 +3,29 @@ package modelo;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+/**
+ * @author el3be
+ */
 public class Funciones {
+
+	/**
+	 * @param anio
+	 * @return Retorna true si el año es bisiesto, y falso si no lo es
+	 */
 	public static boolean esBisiesto(int anio) {
 		return (anio % 4 == 0) && (!(anio % 100 == 0) || (anio % 400 == 0));
 	}
 
 	public static int traerDia(LocalDate fecha) {
 		return fecha.getDayOfMonth();
+	}
+
+	/**
+	 * @param fecha
+	 * @return El numero de día en relación a la semana (1-7)
+	 */
+	public static int traerDiaSemana(LocalDate fecha) {
+		return fecha.getDayOfWeek().getValue();
 	}
 
 	public static int traerMes(LocalDate fecha) {
@@ -29,7 +45,7 @@ public class Funciones {
 	}
 
 	public static String traerFechaCorta(LocalDate fecha) {
-		return String.format("%d/%d/%d", traerAnio(fecha), traerMes(fecha), traerAnio(fecha));
+		return String.format("%d/%d/%d", traerDia(fecha), traerMes(fecha), traerAnio(fecha));
 	}
 
 	public static String traerHoraCorta(LocalTime hora) {
@@ -37,12 +53,15 @@ public class Funciones {
 	}
 
 	public static boolean esDiaHabil(LocalDate fecha) {
-		return fecha.getDayOfWeek().getValue() > 0 && fecha.getDayOfWeek().getValue() < 6;
+
+		int diaSemana = traerDiaSemana(fecha);
+		return (diaSemana >= 1) && (diaSemana <= 5);
 	}
 
 	public static String traerDiaDeLaSemana(LocalDate fecha) {
 		String[] diasDeLaSemana = { "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo" };
-		return diasDeLaSemana[fecha.getDayOfWeek().getValue() - 1];
+		int numeroDiaSemana = traerDiaSemana(fecha);
+		return diasDeLaSemana[numeroDiaSemana - 1];
 	}
 
 	public static String traerMesEnLetras(LocalDate fecha) {
@@ -70,14 +89,19 @@ public class Funciones {
 	}
 
 	public static int traerCantidadDiasMes(int anio, int mes) {
-		if ((esBisiesto(anio)) && (mes == 2))
-			return 29;
-		else if (mes == 2)
-			return 28;
-		else if ((mes == 4) || (mes == 6) || (mes == 9) || (mes == 11))
-			return 30;
-		else
-			return 31;
+
+		int cantidadDias = 0;
+
+		if ((esBisiesto(anio)) && (mes == 2)) {
+			cantidadDias = 29;
+		} else if (mes == 2) {
+			cantidadDias = 28;
+		} else if ((mes == 4) || (mes == 6) || (mes == 9) || (mes == 11)) {
+			cantidadDias = 30;
+		} else {
+			cantidadDias = 31;
+		}
+		return cantidadDias;
 	}
 
 	public static double aproximar2Decimal(double valor) {
